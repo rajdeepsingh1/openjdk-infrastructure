@@ -7,7 +7,7 @@
   yum:
     name: expect
     state: latest
-    tags: crontab
+  tags: crontab
     
 - name: Creates an entry like "auth file"
   cron:
