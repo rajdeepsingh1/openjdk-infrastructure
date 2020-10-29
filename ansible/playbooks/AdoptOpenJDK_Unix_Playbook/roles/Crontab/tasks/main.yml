@@ -14,10 +14,6 @@
     name: telnet
     state: latest
   tags: crontab
-  
-- name: Run auth script
-  script: /./auth.exp
-  tags: crontab
 
 - name: Creates an entry like "auth file"
   cron:
