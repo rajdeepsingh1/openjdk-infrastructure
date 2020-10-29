@@ -2,9 +2,15 @@
 ###########
 # Crontab #
 ###########
+
+- name: install expect package
+  yum:
+    name: expect
+    state: latest
+    
 - name: Creates an entry like "auth file"
   cron:
-    name: "a job for reboot"
+    name: "Auth to BSO Automatically"
     minute: "0"
     hour: "*/6"
     user: root
