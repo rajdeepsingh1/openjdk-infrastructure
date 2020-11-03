@@ -137,13 +137,13 @@
     mode: '0755'
   tags: crontab
   
-- name: Update FSTAB with mounts
-      lineinfile:
-        dest: /etc/fstab
-        line: "#Temporary NFS mounts for testing new VMFARM system
-linuxnfs-1.fyre.ibm.com:/bluebird /bluebird   nfs     defaults        0 0
-linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0"
-  tags: crontab
+#- name: Update FSTAB with mounts
+ #lineinfile:
+  #      dest: /etc/fstab
+  #      line: "#Temporary NFS mounts for testing new VMFARM system
+#linuxnfs-1.fyre.ibm.com:/bluebird /bluebird   nfs     defaults        0 0
+#linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0"
+#  tags: crontab
 
 #New GPFS /team share our of RTP
 9.37.250.96:/rt-rtpnfs/team_new /team nfs defaults 0 0"
