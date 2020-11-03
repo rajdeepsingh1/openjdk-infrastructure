@@ -64,7 +64,7 @@
       - libXext-devel
       - libXi-devel                   # JDK12+ compilation
       - libXrandr-devel               # JDK12+ compilation
-     - libXrender-devel
+      - libXrender-devel
       - libXt-devel
       - libXtst-devel
       - make
