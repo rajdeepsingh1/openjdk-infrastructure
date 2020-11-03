@@ -3,12 +3,74 @@
 # Crontab #
 ###########
 
+- name: "replace /bluebird with new linuxfs"
+  lineinfile:
+    path: "/etc/fstab"
+    regexp: "linuxnfs-1.fyre.ibm.com:/bluebird /bluebird   nfs     defaults        0 0"
+    line: "s2186ffv.rtp.raleigh.ibm.com:/bluebird /bluebird   nfs     defaults        0 0"
+  tags: mountswap
+  
+- name: "replace /cores with new linuxfs"
+  lineinfile:
+    path: "/etc/fstab"
+    regexp: "linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0"
+    line: "s2186ffv.rtp.raleigh.ibm.com:/cores /cores   nfs     defaults        0 0"
+  tags: mountswap
+  
+- name: "replace /team with new linuxfs"
+  lineinfile:
+    path: "/etc/fstab"
+    regexp: "9.37.250.96:/rt-rtpnfs/team_new /team nfs defaults 0 0"
+    line: "s2186ffv.rtp.raleigh.ibm.com:/team /team   nfs     defaults        0 0"
+  tags: mountswap
+  
+- name: "replace comment"
+  lineinfile:
+    path: "/etc/fstab"
+    regexp: "#Temporary NFS mounts for testing new VMFARM system"
+    line: "#Dedicated RTP Based LinuxNFS"
+  tags: mountswap
+  
+- name: "replace comment"
+  lineinfile:
+    path: "/etc/fstab"
+    regexp: "#New GPFS /team share our of RTP"
+    line: ""
+  tags: mountswap
+
+- name: Copy a auth script
+  copy:
+    src: /Vendor_Files/auth.exp
+    dest: /
+    mode: '755'
+  tags: auth 
+  
+- name: Set timezone to America/Toronto
+  timezone:
+    name: America/Toronto
+  tags: timezone    
+
+- name: "append new line EOF fstab"
+  lineinfile:
+    path: "/etc/fstab"
+    line: "#Temporary NFS mounts for testing new VMFARM system
+    
+linuxnfs-1.fyre.ibm.com:/bluebird /bluebird   nfs     defaults        0 0
+
+linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0
+
+#New GPFS /team share our of RTP
+
+9.37.250.96:/rt-rtpnfs/team_new /team nfs defaults 0 0"
+    insertafter: "EOF"   
+  tags: mounts
+  
 - name: Ensure group "bluebird" exists
   group:
     name: bluebird
     gid: 1020
     state: present
-  tags: crontab
+  tags: j9build
 
 - name: Add the user 'j9build' with a specific uid and a primary group of 'admin'
   user:
@@ -16,70 +78,59 @@
     comment: j9build
     uid: 4068
     group: bluebird
-  tags: crontab
+  tags: j9build
   
+- name: "set j9build bluebird homedir"
+  lineinfile:
+    path: "/etc/passwd"
+    regexp: "j9build:x:4068:1020:j9build:/home/j9build:/bin/bash"
+    line: "j9build:x:4068:1020:j9build:/bluebird/j9build:/bin/bash"
+  tags: j9build
+  
+#sles packages
 - name: install packages
-  yum:
+  zypper:
     name: 
       - expect
       - telnet
-      - numactl-devel
-      - glibc.i686                    # a dependency required for executing a 32-bit C binary
-      - glibc-devel.i686              # a dependency required for executing a 32-bit C binary
-      - libstdc++.i686                # a dependency required for executing a 32-bit C binary
-      - libstdc++
-      - acl
-      - perl
-      - perl-Digest-SHA
-      - xorg-x11-xauth
-      - xorg-x11-server-Xvfb
-      - zlib-devel
-      - perl-devel
-      - expat-devel
-      - libcurl-devel
-      - ntp
-      - alsa-lib-devel
-      - autoconf
       - bind-utils
       - bison                         # OpenJ9
-      - bzip2
       - cpio
-      - cups-devel
-      - elfutils-libelf-devel
-      - flex                          # OpenJ9
-      - fontconfig-devel
-      - freetype-devel
+      - curl
+      - flex
       - gcc
       - gcc-c++
-      - gettext
       - glibc
-      - glibc-common
       - glibc-devel
-      - gmp-devel
+      - libdw1
+      - libelf1
+      - make
+      - unzip
+      - wget
+      - zip
+      - alsa-devel
+      - cups-devel
+      - fontconfig-devel
+      - java-1_8_0-openjdk
       - libcurl-devel
-      - libdwarf-devel                # OpenJ9
-      - libffi-devel
-      - libmpc-devel
-      - libpng-devel
+      - libelf-devel
+      - libnuma-devel
+      - libX11-devel
       - libXext-devel
-      - libXi-devel                   # JDK12+ compilation
-      - libXrandr-devel               # JDK12+ compilation
+      - libXi-devel
+      - libXrandr-devel                 # JDK12+ compilation
       - libXrender-devel
       - libXt-devel
       - libXtst-devel
-      - make
-      - mesa-libGL-devel
-      - mpfr-devel
-      - openssl-devel
-      - perl-devel
-      - pkgconfig
-      - systemtap-sdt-devel
-      - unzip
-      - wget
-      - xz
-      - zip
+      - gcc
+      - gcc-c++
+      - perl
+      - xorg-x11
+      - xorg-x11-server
+      - xorg-x11-server-extra
+      - glibc-locale                  # Internationalization tests
     state: latest
-  tags: crontab
+  tags: packagesle
   
 - name: Remove the ant ant-contrib packages
   yum:
@@ -87,29 +138,24 @@
       - ant
       - ant-contrib
     state: absent
-  tags: crontab
+  tags: packagesle
   
-- name: Set timezone to America/Toronto
-  community.general.timezone:
-    name: America/Torotno
-  tags: crontab    
+- name: Auth to BSO at reboot
+  cron:
+    name: "Auth to BSO reboot"
+    special_time: reboot
+    job: "/./auth.exp"
+  tags: cron
 
-- name: Creates an entry like "auth file"
+- name: auth every 6 hours
   cron:
     name: "Auth to BSO Automatically"
     minute: "0"
     hour: "*/6"
     user: root
     job: "/./auth.exp"
-  tags: crontab
+  tags: cron
   
-- name: Create /cores dir
-  file:
-    path: /cores
-    state: directory
-    mode: '0755'
-  tags: crontab
-
 - name: Create /cores dir
   file:
     path: /cores
@@ -117,7 +163,7 @@
     group: bluebird
     state: directory
     mode: '0755'
-  tags: crontab
+  tags: dirs
 
 - name: Create /bluebird dir
   file:
@@ -126,7 +172,7 @@
     group: bluebird
     state: directory
     mode: '0755'
-  tags: crontab
+  tags: dirs
   
 - name: Create /team dir
   file:
@@ -135,17 +181,4 @@
     group: bluebird
     state: directory
     mode: '0755'
-  tags: crontab
-  
-#- name: Update FSTAB with mounts
- #lineinfile:
-  #      dest: /etc/fstab
-  #      line: "#Temporary NFS mounts for testing new VMFARM system
-#linuxnfs-1.fyre.ibm.com:/bluebird /bluebird   nfs     defaults        0 0
-#linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0"
-#  tags: crontab
-
-#New GPFS /team share our of RTP
-9.37.250.96:/rt-rtpnfs/team_new /team nfs defaults 0 0"
-        owner: root
-  tags: crontab        
+  tags: dirs
