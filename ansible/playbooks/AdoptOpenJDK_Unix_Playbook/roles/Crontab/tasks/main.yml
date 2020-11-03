@@ -24,6 +24,20 @@
       - expect
       - telnet
       - numactl-devel
+      - glibc.i686                    # a dependency required for executing a 32-bit C binary
+      - glibc-devel.i686              # a dependency required for executing a 32-bit C binary
+      - libstdc++.i686                # a dependency required for executing a 32-bit C binary
+      - libstdc++
+      - acl
+      - perl
+      - perl-Digest-SHA
+      - xorg-x11-xauth
+      - xorg-x11-server-Xvfb
+      - zlib-devel
+      - perl-devel
+      - expat-devel
+      - libcurl-devel
+      - ntp
       - alsa-lib-devel
       - autoconf
       - bind-utils
@@ -32,7 +46,6 @@
       - cpio
       - cups-devel
       - elfutils-libelf-devel
-      - file
       - flex                          # OpenJ9
       - fontconfig-devel
       - freetype-devel
@@ -43,55 +56,28 @@
       - glibc-common
       - glibc-devel
       - gmp-devel
-      - java-1.8.0-openjdk-devel
       - libcurl-devel
       - libdwarf-devel                # OpenJ9
+      - libffi-devel
+      - libmpc-devel
       - libpng-devel
       - libXext-devel
       - libXi-devel                   # JDK12+ compilation
-      - libXrandr-devel               # JDK12+ compilations
-      - libXrender-devel
+      - libXrandr-devel               # JDK12+ compilation
+     - libXrender-devel
       - libXt-devel
       - libXtst-devel
       - make
       - mesa-libGL-devel
       - mpfr-devel
-      - numactl-devel                 # OpenJ9
       - openssl-devel
-      - perl-DBI
       - perl-devel
-      - perl-Digest-SHA
-      - perl-GD
-      - perl-libwww-perl
-      - perl-Time-HiRes
+      - pkgconfig
       - systemtap-sdt-devel
       - unzip
       - wget
-      - which
       - xz
       - zip
-      - devtoolset-2-gcc
-      - devtoolset-2-binutils
-      - devtoolset-2-gcc-c++
-      - libstdc++-static
-      - libdwarf-devel
-      - lbzip2
-      - java-1.7.0-openjdk-devel
-      - ntp
-      - glibc.i686                    # a dependency required for executing a 32-bit C binary       - glibc-devel.i686              # a dependency required for executing a 32-bit C binary
-       - libstdc++.i686                # a dependency required for executing a 32-bit C binary
-      - gcc
-      - gcc-c++
-      - unzip
-      - zlib-devel
-      - perl-devel
-      - libcurl-devel
-      - openssl-devel
-      - mercurial
-      - perl
-      - xorg-x11-xauth
-      - xorg-x11-server-Xorg
-      - xorg-x11-server-Xvfb
     state: latest
   tags: crontab
   
@@ -120,6 +106,33 @@
 - name: Create /cores dir
   file:
     path: /cores
+    state: directory
+    mode: '0755'
+  tags: crontab
+
+- name: Create /cores dir
+  file:
+    path: /cores
+    owner: j9build
+    group: bluebird
+    state: directory
+    mode: '0755'
+  tags: crontab
+
+- name: Create /bluebird dir
+  file:
+    path: /bluebird
+    owner: j9build
+    group: bluebird
+    state: directory
+    mode: '0755'
+  tags: crontab
+  
+- name: Create /team dir
+  file:
+    path: /team
+    owner: j9build
+    group: bluebird
     state: directory
     mode: '0755'
   tags: crontab
