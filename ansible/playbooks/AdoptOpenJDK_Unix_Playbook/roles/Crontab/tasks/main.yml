@@ -105,30 +105,30 @@ linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0
       - libdw1
       - libelf1
       - make
+      - pkg-config
       - unzip
       - wget
       - zip
-      - alsa-devel
-      - cups-devel
-      - fontconfig-devel
       - java-1_8_0-openjdk
-      - libcurl-devel
-      - libelf-devel
-      - libnuma-devel
-      - libX11-devel
-      - libXext-devel
-      - libXi-devel
-      - libXrandr-devel                 # JDK12+ compilation
-      - libXrender-devel
-      - libXt-devel
-      - libXtst-devel
-      - gcc
-      - gcc-c++
-      - perl
-      - xorg-x11
-      - xorg-x11-server
-      - xorg-x11-server-extra
-      - glibc-locale                  # Internationalization tests
+      - git-core
+      - libelf0
+      - libfreetype6
+      - libXext6
+      - libXi6                        # JDK12+ compilation
+      - libXrandr2                    # JDK12+ compilation
+      - libXrender1
+      - libXt6
+      - libXtst6
+      - Mesa-libGL1
+      - ntp
+      - perl-CPAN-Meta
+      - glibc-32bit                   # a dependency required for executing a 32-bit C binary
+      - glibc-devel-32bit             # a dependency required for executing a 32-bit C binary
+      - libstdc++6-32bit              # a dependency required for executing a 32-bit C binary
+      - libelf0-32bit                 # a dependency required for executing a 32-bit C binary
+      - libelf0-debuginfo-32bit       # a dependency required for executing a 32-bit C binary
+      - libstdc++-devel-32bit         # a dependency required for executing a 32-bit C binary
+      - libXtst6-32bit                # a dependency required for executing a 32-bit C binary
     state: latest
   tags: packagesle
   
