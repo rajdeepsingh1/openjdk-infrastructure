@@ -27,14 +27,21 @@
 - name: "replace comment"
   lineinfile:
     path: "/etc/fstab"
-    regexp: "#New GPFS /team share our of RTP"
+    regexp: "#GPFS for new /team mount"
     line: "#Dedicated RTP Based LinuxNFS"
+  tags: mountswapteam
+  
+- name: mount all
+  command: mount -a
+  args:
+    warn: no
+  become: true
   tags: mountswapteam
   
 - name: "replace comment"
   lineinfile:
     path: "/etc/fstab"
-    regexp: "#New GPFS /team share our of RTP"
+    regexp: "9.37.250.190:/rt-rtpnfs/team_new /team nfs defaults,rsize=8192,wsize=8192,hard,intr 1 2"
     line: ""
   tags: mountswap
 
