@@ -22,14 +22,14 @@
     path: "/etc/fstab"
     regexp: "9.37.250.96:/rt-rtpnfs/team_new /team nfs defaults 0 0"
     line: "s2186ffv.rtp.raleigh.ibm.com:/team /team   nfs     defaults        0 0"
-  tags: mountswap
+  tags: mountswapteam
   
 - name: "replace comment"
   lineinfile:
     path: "/etc/fstab"
-    regexp: "#Temporary NFS mounts for testing new VMFARM system"
+    regexp: "#New GPFS /team share our of RTP"
     line: "#Dedicated RTP Based LinuxNFS"
-  tags: mountswap
+  tags: mountswapteam
   
 - name: "replace comment"
   lineinfile:
