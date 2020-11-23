@@ -31,6 +31,13 @@
     line: "#Dedicated RTP Based LinuxNFS"
   tags: mountswapteam
   
+  - name: "replace comment"
+  lineinfile:
+    path: "/etc/fstab"
+    regexp: "9.37.250.190:/rt-rtpnfs/team_new /team nfs defaults,rsize=8192,wsize=8192,hard,intr 1 2"
+    line: ""
+  tags: mountswapteam
+  
 - name: mount all
   command: mount -a
   args:
@@ -38,13 +45,6 @@
   become: true
   tags: mountswapteam
   
-- name: "replace comment"
-  lineinfile:
-    path: "/etc/fstab"
-    regexp: "9.37.250.190:/rt-rtpnfs/team_new /team nfs defaults,rsize=8192,wsize=8192,hard,intr 1 2"
-    line: ""
-  tags: mountswapteam
-
 - name: Copy a auth script
   copy:
     src: /Vendor_Files/auth.exp
