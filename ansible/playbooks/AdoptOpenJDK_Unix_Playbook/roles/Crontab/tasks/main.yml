@@ -30,14 +30,7 @@
     regexp: "#GPFS for new /team mount"
     line: "#Dedicated RTP Based LinuxNFS"
   tags: mountswapteam
-    
-- name: mount all
-  command: mount -a
-  args:
-    warn: no
-  become: true
-  tags: mountswapteam
-  
+
 - name: "replace comment"
   lineinfile:
     path: "/etc/fstab"
@@ -51,27 +44,7 @@
     dest: /
     mode: '755'
   tags: auth 
-  
-- name: Set timezone to America/Toronto
-  timezone:
-    name: America/Toronto
-  tags: timezone    
-
-- name: "append new line EOF fstab"
-  lineinfile:
-    path: "/etc/fstab"
-    line: "#Temporary NFS mounts for testing new VMFARM system
-    
-linuxnfs-1.fyre.ibm.com:/bluebird /bluebird   nfs     defaults        0 0
-
-linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0
-
-#New GPFS /team share our of RTP
-
-9.37.250.96:/rt-rtpnfs/team_new /team nfs defaults 0 0"
-    insertafter: "EOF"   
-  tags: mounts
-  
+   
 - name: Ensure group "bluebird" exists
   group:
     name: bluebird
@@ -100,42 +73,64 @@ linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0
     name: 
       - expect
       - telnet
-      - bind-utils
-      - bison                         # OpenJ9
-      - cpio
-      - curl
-      - flex
       - gcc
       - gcc-c++
+      - unzip
+      - zlib-devel
+      - perl-devel
+     - libcurl-devel
+      - openssl-devel
+      - mercurial
+      - perl
+      - xorg-x11-xauth
+      - xorg-x11-server-Xorg
+      - xorg-x11-server-Xvfb
+      - alsa-lib-devel
+      - autoconf
+      - bind-utils
+      - bison                         # OpenJ9
+      - bzip2
+      - cpio
+      - cups-devel
+      - elfutils-libelf-devel
+      - file
+      - flex                          # OpenJ9
+      - fontconfig-devel
+      - freetype-devel
+      - gcc
+      - gcc-c++
+      - gettext
       - glibc
+      - glibc-common
       - glibc-devel
-      - libdw1
-      - libelf1
+      - gmp-devel
+      - java-1.8.0-openjdk-devel
+      - libcurl-devel
+      - libdwarf-devel                # OpenJ9
+      - libpng-devel
+      - libXext-devel
+      - libXi-devel                   # JDK12+ compilation
+      - libXrandr-devel               # JDK12+ compilations
+      - libXrender-devel
+      - libXt-devel
+      - libXtst-devel
       - make
-      - pkg-config
+      - mesa-libGL-devel
+      - mpfr-devel
+      - numactl-devel                 # OpenJ9
+      - openssl-devel
+      - perl-DBI
+      - perl-devel
+      - perl-Digest-SHA
+      - perl-GD
+      - perl-libwww-perl
+      - perl-Time-HiRes
+      - systemtap-sdt-devel
       - unzip
       - wget
+      - which
+      - xz
       - zip
-      - java-1_8_0-openjdk
-      - git-core
-      - libelf0
-      - libfreetype6
-      - libXext6
-      - libXi6                        # JDK12+ compilation
-      - libXrandr2                    # JDK12+ compilation
-      - libXrender1
-      - libXt6
-      - libXtst6
-      - Mesa-libGL1
-      - ntp
-      - perl-CPAN-Meta
-      - glibc-32bit                   # a dependency required for executing a 32-bit C binary
-      - glibc-devel-32bit             # a dependency required for executing a 32-bit C binary
-      - libstdc++6-32bit              # a dependency required for executing a 32-bit C binary
-      - libelf0-32bit                 # a dependency required for executing a 32-bit C binary
-      - libelf0-debuginfo-32bit       # a dependency required for executing a 32-bit C binary
-      - libstdc++-devel-32bit         # a dependency required for executing a 32-bit C binary
-      - libXtst6-32bit                # a dependency required for executing a 32-bit C binary
     state: latest
   tags: packagesle
   
@@ -189,3 +184,28 @@ linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0
     state: directory
     mode: '0755'
   tags: dirs
+  
+- name: Set timezone to America/Toronto
+  timezone:
+    name: America/Toronto
+  tags: timezone    
+
+- name: "append new line EOF fstab"
+  lineinfile:
+    path: "/etc/fstab"
+    line: "#Dedicated RTP Based LinuxNFS
+    
+s2186ffv.rtp.raleigh.ibm.com:/team /team   nfs     defaults        0 0
+
+s2186ffv.rtp.raleigh.ibm.com:/cores /cores   nfs     defaults        0 0
+
+s2186ffv.rtp.raleigh.ibm.com:/bluebird /bluebird nfs defaults 0 0"
+    insertafter: "EOF"   
+  tags: mounts
+  
+- name: mount all
+  command: mount -a
+  args:
+    warn: no
+  become: true
+  tags: mountall
