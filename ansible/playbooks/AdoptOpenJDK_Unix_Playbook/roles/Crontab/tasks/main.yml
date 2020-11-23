@@ -69,7 +69,7 @@
   
 #sles packages
 - name: install packages
-  zypper:
+  yum:
     name: 
       - expect
       - telnet
