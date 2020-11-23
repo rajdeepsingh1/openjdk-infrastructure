@@ -20,7 +20,7 @@
 - name: "replace /team with new linuxfs"
   lineinfile:
     path: "/etc/fstab"
-    regexp: "9.37.250.96:/rt-rtpnfs/team_new /team nfs defaults 0 0"
+    regexp: "9.37.250.190:/rt-rtpnfs/team_new /team nfs defaults,rsize=8192,wsize=8192,hard,intr 1 2"
     line: "s2186ffv.rtp.raleigh.ibm.com:/team /team   nfs     defaults        0 0"
   tags: mountswapteam
   
@@ -36,7 +36,7 @@
     path: "/etc/fstab"
     regexp: "9.37.250.190:/rt-rtpnfs/team_new /team nfs defaults,rsize=8192,wsize=8192,hard,intr 1 2"
     line: ""
-  tags: mountswapteam
+  tags: mountswap
   
 - name: mount all
   command: mount -a
