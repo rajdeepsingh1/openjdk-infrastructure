@@ -6,29 +6,29 @@
 - name: "replace /bluebird with new linuxfs"
   lineinfile:
     path: "/etc/fstab"
-    regexp: "linuxnfs-1.fyre.ibm.com:/bluebird /bluebird   nfs     defaults        0 0"
-    line: "s2186ffv.rtp.raleigh.ibm.com:/bluebird /bluebird   nfs     defaults        0 0"
+    regexp: "s2186ffv.rtp.raleigh.ibm.com:/bluebird /bluebird   nfs     defaults        0 0"
+    line: "linuxnfs.ottawa.ibm.com:/bluebird /bluebird nfs vers=3,rw,nodev,nosuid,soft,nolock"
   tags: mountswap
   
 - name: "replace /cores with new linuxfs"
   lineinfile:
     path: "/etc/fstab"
-    regexp: "linuxnfs-1.fyre.ibm.com:/cores /cores   nfs     defaults        0 0"
-    line: "s2186ffv.rtp.raleigh.ibm.com:/cores /cores   nfs     defaults        0 0"
+    regexp: "s2186ffv.rtp.raleigh.ibm.com:/cores /cores  nfs     defaults        0 0"
+    line: "linuxnfs.ottawa.ibm.com:/data/cores /cores nfs defaults,rsize=8192,wsize=8192,hard,intr"
   tags: mountswap
   
 - name: "replace /team with new linuxfs"
   lineinfile:
     path: "/etc/fstab"
-    regexp: "9.37.250.190:/rt-rtpnfs/team_new /team nfs defaults,rsize=8192,wsize=8192,hard,intr 1 2"
-    line: "s2186ffv.rtp.raleigh.ibm.com:/team /team   nfs     defaults        0 0"
+    regexp: "s2186ffv.rtp.raleigh.ibm.com:/team /team   nfs     defaults        0 0"
+    line: "linuxnfs.ottawa.ibm.com:/team /team nfs vers=3,rw,nodev,nosuid,soft,nolock"
   tags: mountswapteam
   
 - name: "replace comment"
   lineinfile:
     path: "/etc/fstab"
-    regexp: "#GPFS for new /team mount"
-    line: "#Dedicated RTP Based LinuxNFS"
+    regexp: "#Dedicated RTP Based LinuxNFS"
+    line: ""
   tags: mountswapteam
 
 - name: "replace comment"
@@ -36,7 +36,7 @@
     path: "/etc/fstab"
     regexp: "9.37.250.190:/rt-rtpnfs/team_new /team nfs defaults,rsize=8192,wsize=8192,hard,intr 1 2"
     line: ""
-  tags: mountswapteam
+  tags: mountswapteam1
   
 - name: Copy a auth script
   copy:
@@ -193,13 +193,7 @@
 - name: "append new line EOF fstab"
   lineinfile:
     path: "/etc/fstab"
-    line: "#Dedicated RTP Based LinuxNFS
-    
-s2186ffv.rtp.raleigh.ibm.com:/team /team   nfs     defaults        0 0
-
-s2186ffv.rtp.raleigh.ibm.com:/cores /cores   nfs     defaults        0 0
-
-s2186ffv.rtp.raleigh.ibm.com:/bluebird /bluebird nfs defaults 0 0"
+    line: "linuxnfs.ottawa.ibm.com:/service /service nfs defaults,rsize=8192,wsize=8192,hard,intr"
     insertafter: "EOF"   
   tags: mounts
   
